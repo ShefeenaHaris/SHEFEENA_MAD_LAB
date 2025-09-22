@@ -1,0 +1,74 @@
+package com.example.sharedpreferences;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+
+        EditText user,mob,pass1,pass2,email;
+        Button submit;
+        SharedPreferences sharedPreferences;
+        SharedPreferences.Editor editor;
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        user=findViewById(R.id.user);
+        mob=findViewById(R.id.mob);
+        email=findViewById(R.id.email);
+        pass1=findViewById(R.id.pass1);
+        pass2=findViewById(R.id.pass2);
+        submit=findViewById(R.id.sub);
+        sharedPreferences = getSharedPreferences("UserDetails",MODE_PRIVATE);
+        editor =sharedPreferences.edit();
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String username = user.getText().toString().trim();
+                String mobno = mob.getText().toString().trim();
+                String mail = email.getText().toString().trim();
+                String passw1 = pass1.getText().toString().trim();
+                String passw2 = pass2.getText().toString().trim();
+
+                if (username.isEmpty()) {
+                    user.setError("username is empty");
+                    user.requestFocus();
+                    return;
+                }
+                if (mobno.isEmpty()) {
+                    mob.setError("mobile number is empty");
+                    mob.requestFocus();
+                    return;
+                }
+                if (mail.isEmpty()) {
+                    email.setError("email is empty");
+                    email.requestFocus();
+                    return;
+                }
+                if (passw1.isEmpty()) {
+                    pass1.setError("Enter password");
+                    pass1.requestFocus();
+                    return;
+                }
+                if (!passw1.equals(passw2)) {
+                    pass2.setError("password not matches");
+                    pass2.requestFocus();
+                    return;
+                }
+                Toast.makeText(MainActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+                editor.putString("Keyusername", username);
+                editor.putString("Keymobile", mobno);
+                editor.putString("Keyemail", mail);
+                editor.putString("Keypassword", passw2);
+                editor.apply();
+            }
+
+        });
+    }
+}
+
